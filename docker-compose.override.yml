@@ -1,0 +1,9 @@
+services:
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    networks:
+      - app
