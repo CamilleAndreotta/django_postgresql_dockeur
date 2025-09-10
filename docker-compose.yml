@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+  
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: app:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "${PORT}:8000"
+    depends_on:
+      - db
+    environment:
+      PYTHONDONTWRITEBYTECODE: ${PYTHONDONTWRITEBYTECODE}
+      PYTHONUNBUFFERED: ${PYTHONUNBUFFERED}
+    env_file:
+      - .env
+    networks:
+      - app
+
+volumes:
+  postgres_data:
+
+networks:
+  app:
+      
